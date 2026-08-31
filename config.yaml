@@ -1,0 +1,145 @@
+project_name: CMGT-DINO-HortiM3
+version: "1.0"
+seed: 42
+
+data:
+  # Existing extracted Horti-M3 root.
+  root: /HortiM3_RAMF_Complete/2023-2025 Tomato dataset
+  years: [2023, 2024, 2025]
+
+  # Reuse the already validated v1.3 manifest if available.
+  external_manifest_candidates:
+    - ../SCoRe_Fuse_HortiM3_ThreeYear_v1_3/manifest_outputs/Multimodal_Manifest_2023_2025.csv
+    - ../SCoRe_Fuse_HortiM3_ThreeYear_v1_2/manifest_outputs/Multimodal_Manifest_2023_2025.csv
+
+  manifest_csv: ./manifest_outputs/Multimodal_Manifest_2023_2025.csv
+  auto_build_manifest: true
+  strict_three_year: true
+
+  cache_dir: ./cmgt_cache
+  output_dir: ./cmgt_outputs
+
+  sensor_features:
+    - Voltage
+    - Air Temperature
+    - Relative Humidity
+    - Light Intensity
+    - CO2
+    - Soil Moisture
+    - Soil Temperature
+
+manifest:
+  minimum_target_match_rate: 0.95
+  allow_growth_table_fallback: true
+  target_overrides:
+    2023:
+      file_contains: "2023 Tomato Production Data"
+      sheet_contains: null
+      id_column: null
+      yield_column: null
+    2024:
+      file_contains: "2024 Tomato Production Data"
+      sheet_contains: null
+      id_column: null
+      yield_column: null
+    2025:
+      file_contains: "2025 Tomato Production Data"
+      sheet_contains: null
+      id_column: null
+      yield_column: null
+
+vision:
+  # Main proposed visual encoder.
+  proposed_backbone: dinov3_vits16
+#   proposed_backbone: dinov2_small
+  backbones:
+    dinov3_vits16:
+      type: huggingface
+      model_id: 
+    dinov3_convnext_tiny:
+      type: huggingface
+      model_id: 
+    dinov2_small:
+      type: huggingface
+      model_id: facebook/dinov2-small
+    efficientnet_b0:
+      type: torchvision
+      model_id: efficientnet_b0
+    convnext_tiny:
+      type: torchvision
+      model_id: convnext_tiny
+
+  batch_size: 12
+  num_workers: 0
+  device: auto
+  disable_cudnn: true
+  use_amp: false
+
+  # If Hugging Face access is restricted, place a downloaded model folder
+  # here and replace model_id with that local directory.
+  local_files_only: false
+
+trajectory:
+  stages: [early, middle, late]
+
+  # Frozen DINO stage embedding vectors retained before fold-wise PCA:
+  # early, middle, late, E->M, M->L, E->L.
+  image_vector_components:
+    [early_mean, middle_mean, late_mean, delta_em, delta_ml, delta_el]
+
+  phenotype_stage_stats:
+    [mean, std, last, missing]
+
+  sensor_stage_stats:
+    [mean, std, min, max, q25, q75]
+
+  sensor_interval_hours: 0.5
+  growing_degree_base_c: 10.0
+  high_temperature_c: 30.0
+
+features:
+  image_pca_components: 48
+  phenotype_pca_components: 32
+  environment_pca_components: 24
+  static_image_pca_components: 32
+  static_phenotype_pca_components: 24
+  static_environment_pca_components: 16
+
+model:
+  inner_folds: 5
+  candidate_heads:
+    - extratrees
+    - catboost
+    - histgb
+    - xgboost
+
+  # OOF non-negative blend is used only if OOF RMSE is lower than the
+  # strongest single candidate.
+  use_oof_blend: true
+
+experiment:
+  repeats: 20
+  test_fraction: 0.20
+  bootstrap_iterations: 2000
+  run_leave_one_year_out: true
+
+  # Keeps all years represented in every random held-out split.
+  year_stratified_split: true
+
+backbone_ablation:
+  enabled_backbones:
+    - efficientnet_b0
+    - convnext_tiny
+    - dinov2_small
+    - dinov3_vits16
+    - dinov3_convnext_tiny
+  repeats: 10
+
+xai:
+  block_permutation_repeats: 20
+  engineered_feature_permutation_repeats: 5
+  max_engineered_features: 50
+
+output:
+  dpi: 600
+

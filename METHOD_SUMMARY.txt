@@ -1,0 +1,36 @@
+CMGT-DINO components
+====================
+
+Visual branch
+-------------
+Frozen DINOv3 ViT-S/16.
+Early / middle / late stage embeddings.
+E->M, M->L and E->L embedding change vectors.
+
+Phenotype branch
+----------------
+Stage statistics and longitudinal changes for Horti-M3 phenotype variables.
+
+Environment branch
+------------------
+Stage environmental statistics plus VPD, growing-degree-hour,
+high-temperature-hour, light exposure proxy and CO2 exposure proxy.
+
+Cross-Modal Growth Concordance
+------------------------------
+Pairwise growth-trajectory agreement between:
+- image and phenotype,
+- image and environment,
+- phenotype and environment.
+
+Final head
+----------
+OOF-validated lightweight candidate regression heads with an optional
+non-negative OOF blend, accepted only when OOF RMSE improves.
+
+Evaluation
+----------
+20 year-stratified repeated held-out evaluations.
+Leave-one-year-out validation.
+Backbone ablation.
+Ablation and statistical significance tests.

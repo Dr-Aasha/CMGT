@@ -1,0 +1,2 @@
+CMGT-DINO Horti-M3 v1.0
+Cross-Modal Growth Trajectory Learning with Frozen DINOv3.

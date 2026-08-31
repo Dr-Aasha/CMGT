@@ -1,0 +1,64 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+
+# Virtual environments
+env/
+venv/
+.env
+.venv/
+
+# Secrets / credentials
+*.env
+.env.*
+*.key
+*.pem
+credentials*
+token*
+secrets*
+
+# Hugging Face / model caches
+.cache/
+huggingface/
+*.pth
+*.pt
+*.ckpt
+*.bin
+*.safetensors
+
+# Dataset
+data/
+dataset/
+datasets/
+Horti-M3*/
+*.zip
+
+# CMGT cached embeddings
+cmgt_cache/
+cache/
+embeddings/
+
+# Large experiment outputs
+cmgt_outputs/
+outputs/
+results/
+
+# Temporary files
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Secrets
+.env
+.env.*
+secrets.yaml
+credentials.yaml

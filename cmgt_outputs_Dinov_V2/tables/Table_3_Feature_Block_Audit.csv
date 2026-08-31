@@ -1,0 +1,9 @@
+block,samples,features,finite_fraction
+image_trajectory,207,2304,0.9492753623188406
+phenotype_trajectory,207,234,0.759692803171064
+environment_trajectory,207,186,0.9918965248558517
+concordance,207,48,0.9918478260869565
+meta_reliability,207,9,1.0
+static_image,207,768,0.9855072463768116
+static_phenotype,207,65,0.7975473801560758
+static_environment,207,108,1.0
